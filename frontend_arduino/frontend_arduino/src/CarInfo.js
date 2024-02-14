@@ -1,8 +1,11 @@
+import { use } from 'chai';
 import React, { useState, useEffect } from 'react';
 
 const CarInfo = () => {
   const [carsInTunnel, setCarsInTunnel] = useState(null);
   const [trafficLightColor, setTrafficLightColor] = useState('green');
+  const [redLight, setRedLight] = useState('white')
+  const [greenLight, setGreenLight] = useState('white')
 
   const sendCommand = (command) => {
     fetch(`http://127.0.0.1:3000/api/close_tunnel`, {
@@ -17,7 +20,14 @@ const CarInfo = () => {
         console.log('Command sent successfully:', data);
 
         // Update traffic light color based on the command
-        setTrafficLightColor(command === 'ON' ? 'red' : 'green');
+        // setTrafficLightColor(command === 'ON' ? setRedLight('red') && setGreenLight('white') : setGreenLight('green') && setRedLight('white'));
+        if (command === 'ON'){
+            setGreenLight('white')
+            setRedLight('red') 
+        }else{
+            setRedLight('white')
+            setGreenLight('green') 
+        }
       })
       .catch((error) => {
         console.error('Error sending command:', error);
@@ -31,13 +41,24 @@ const CarInfo = () => {
           style={{
             width: '50px',
             height: '50px',
-            backgroundColor: trafficLightColor,
+            backgroundColor: redLight,
+            border: 'solid 1px black',
+            borderRadius: '50%',
+            margin: '10px',
+          }}
+        />
+        <div
+          style={{
+            width: '50px',
+            height: '50px',
+            backgroundColor: greenLight,
             border: 'solid 1px black',
             borderRadius: '50%',
             margin: '10px',
           }}
         />
       </div>
+      
     );
   };
 

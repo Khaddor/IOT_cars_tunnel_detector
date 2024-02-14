@@ -1,9 +1,6 @@
-// Import the Express.js framework
 const express = require('express');
-// Create an instance of the Express application
 const app = express();
 
-// Define routes
 app.get('/', (req, res) => {
     res.send('Hello, Express!');
 });

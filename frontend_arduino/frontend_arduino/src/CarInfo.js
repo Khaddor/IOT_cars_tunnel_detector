@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const CarInfo = () => {
   const [carsInTunnel, setCarsInTunnel] = useState(null);
-
+  const [trafficLightColor, setTrafficLightColor] = useState('green');
 
   const sendCommand = (command) => {
     fetch(`http://127.0.0.1:3000/api/close_tunnel`, {
@@ -16,10 +16,29 @@ const CarInfo = () => {
       .then((data) => {
         console.log('Command sent successfully:', data);
 
+        // Update traffic light color based on the command
+        setTrafficLightColor(command === 'ON' ? 'red' : 'green');
       })
       .catch((error) => {
         console.error('Error sending command:', error);
       });
+  };
+
+  const TrafficLight = () => {
+    return (
+      <div className="App" style={{ border: '2px solid black', width: '70px' }}>
+        <div
+          style={{
+            width: '50px',
+            height: '50px',
+            backgroundColor: trafficLightColor,
+            border: 'solid 1px black',
+            borderRadius: '50%',
+            margin: '10px',
+          }}
+        />
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -44,8 +63,9 @@ const CarInfo = () => {
         <p>Loading...</p>
       )}
 
-        <button onClick={() => sendCommand('ON')}>Turn ON</button>
-        <button onClick={() => sendCommand('OFF')}>Turn OFF</button>
+      <TrafficLight />
+      <button onClick={() => sendCommand('ON')}>Turn ON</button>
+      <button onClick={() => sendCommand('OFF')}>Turn OFF</button>
     </div>
   );
 };

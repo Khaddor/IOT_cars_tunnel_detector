@@ -4,7 +4,23 @@ const CarInfo = () => {
   const [carsInTunnel, setCarsInTunnel] = useState(null);
 
 
- 
+  const sendCommand = (command) => {
+    fetch(`http://127.0.0.1:3000/api/close_tunnel`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ command }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Command sent successfully:', data);
+
+      })
+      .catch((error) => {
+        console.error('Error sending command:', error);
+      });
+  };
 
   useEffect(() => {
     const socket = new WebSocket('ws://127.0.0.1:3000');
@@ -27,6 +43,9 @@ const CarInfo = () => {
       ) : (
         <p>Loading...</p>
       )}
+
+        <button onClick={() => sendCommand('ON')}>Turn ON</button>
+        <button onClick={() => sendCommand('OFF')}>Turn OFF</button>
     </div>
   );
 };

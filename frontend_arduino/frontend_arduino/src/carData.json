@@ -1,0 +1,16 @@
+{
+    "data": [
+      {"hour": 8, "averageCars": 100},
+      {"hour": 10, "averageCars": 55},
+      {"hour": 11, "averageCars": 90},
+      {"hour": 12, "averageCars": 200},
+      {"hour": 13, "averageCars": 150},
+      {"hour": 14, "averageCars": 80},
+      {"hour": 16, "averageCars": 90},
+      {"hour": 18, "averageCars": 250},
+      {"hour": 19, "averageCars": 100},
+      {"hour": 21, "averageCars": 96},
+      {"hour": 23, "averageCars": 43}
+    ]
+  }
+  

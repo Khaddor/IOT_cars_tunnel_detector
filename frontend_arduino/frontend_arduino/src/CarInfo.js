@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import BarChart from './BarChart';
 
 const CarInfo = () => {
   const [carsInTunnel, setCarsInTunnel] = useState(null);
@@ -129,7 +130,11 @@ const CarInfo = () => {
           </div>
         </div>
       </div>
-    </div>
+          <div className="text-center p-4 mb-5 mt-5" style={{ backgroundColor: '#FAF9F6', borderRadius: '15px' }}>
+            <h2>Average Cars in the Tunnel per Hour</h2>
+      <BarChart />
+</div>
+</div>
   );
 };
 

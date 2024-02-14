@@ -6,7 +6,7 @@ import CarInfo from './CarInfo';
 function App() {
   return (
     <div className="App">
-      <h1>Projet Arduino</h1>
+      {/* <h1>Projet Arduino</h1> */}
       <CarInfo />
     </div>
   );

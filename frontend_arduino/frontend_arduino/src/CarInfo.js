@@ -1,11 +1,10 @@
-import { use } from 'chai';
 import React, { useState, useEffect } from 'react';
 
 const CarInfo = () => {
   const [carsInTunnel, setCarsInTunnel] = useState(null);
   const [trafficLightColor, setTrafficLightColor] = useState('green');
   const [redLight, setRedLight] = useState('white')
-  const [greenLight, setGreenLight] = useState('white')
+  const [greenLight, setGreenLight] = useState('green')
 
   const sendCommand = (command) => {
     fetch(`http://127.0.0.1:3000/api/close_tunnel`, {
@@ -19,14 +18,12 @@ const CarInfo = () => {
       .then((data) => {
         console.log('Command sent successfully:', data);
 
-        // Update traffic light color based on the command
-        // setTrafficLightColor(command === 'ON' ? setRedLight('red') && setGreenLight('white') : setGreenLight('green') && setRedLight('white'));
-        if (command === 'ON'){
-            setGreenLight('white')
-            setRedLight('red') 
-        }else{
-            setRedLight('white')
-            setGreenLight('green') 
+        if (command === 'ON') {
+          setGreenLight('white')
+          setRedLight('red')
+        } else {
+          setRedLight('white')
+          setGreenLight('green')
         }
       })
       .catch((error) => {
@@ -58,7 +55,6 @@ const CarInfo = () => {
           }}
         />
       </div>
-      
     );
   };
 
@@ -75,18 +71,64 @@ const CarInfo = () => {
     };
   }, []);
 
-  return (
-    <div>
-      <h2>Car Information</h2>
-      {carsInTunnel !== null ? (
-        <p>Actual Number of Cars in Tunnel: {carsInTunnel}</p>
-      ) : (
-        <p>Loading...</p>
-      )}
+  // Calculate the percentage of current cars in tunnel
+  const percentage = carsInTunnel !== null ? Math.min((carsInTunnel / 30) * 100, 100) : null;
 
-      <TrafficLight />
-      <button onClick={() => sendCommand('ON')}>Turn ON</button>
-      <button onClick={() => sendCommand('OFF')}>Turn OFF</button>
+  return (
+    <div
+      className=""
+      style={{
+        backgroundColor: '#E2DFD2',
+        padding: '5px',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center', // Center the content horizontally
+      }}
+    >
+      <div className='mt-5'>
+        <h1 className='text-center mt-5'>Tunnel Control Panel</h1>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+        {/* Container with traffic light and buttons */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div className="text-center p-5 mt-5" style={{ backgroundColor: '#FAF9F6', borderRadius: '15px', display: 'flex', alignItems: 'center' }}>
+            {/* Container for traffic light */}
+            <div>
+              <TrafficLight />
+            </div>
+            {/* Container for buttons */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <button className='btn btn-danger m-2' onClick={() => sendCommand('ON')}>Turn ON Red Light</button>
+              <button className='btn btn-success m-2' onClick={() => sendCommand('OFF')}>Turn On Green Light</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Container with the number of cars */}
+        <div style={{ marginLeft: '20px' }}>
+          <div className="text-center p-5 mt-5" style={{ backgroundColor: '#FAF9F6', borderRadius: '15px' }}>
+            <h2>Cars In Tunnel</h2>
+            {carsInTunnel !== null ? (
+              <h3 className='text-center' style={{ fontSize: '400%' }}>{carsInTunnel}</h3>
+            ) : (
+              <p>Loading...</p>
+            )}
+          </div>
+        </div>
+
+        {/* Container with the percentage of current cars in tunnel */}
+        <div style={{ marginLeft: '20px' }}>
+          <div className="text-center p-5 mt-5" style={{ backgroundColor: '#FAF9F6', borderRadius: '15px' }}>
+            <h2>Tunnel Capacity</h2>
+            {percentage !== null ? (
+              <h3 className='text-center' style={{ fontSize: '400%' }}>{percentage}%</h3>
+            ) : (
+              <p>Loading...</p>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

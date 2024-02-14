@@ -35,7 +35,7 @@ wss.on('connection', (ws) => {
     ws.send(JSON.stringify({ carsInTunnel }));
   });
 
-  app.post('/api/close_tunnel', (req, res) => {
+app.post('/api/close_tunnel', (req, res) => {
     if (req.body.command === 'ON') {
       serialPort.write('LED2_ON\n', function(err) {
         if (err) {
@@ -55,15 +55,31 @@ wss.on('connection', (ws) => {
   });
   
 
-parser.on('data', (data) => {
-  console.log('Data from Arduino:', data);
-  carsInTunnel = parseInt(data.trim());
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify({ carsInTunnel }));
+  parser.on('data', (data) => {
+    console.log('Data from Arduino:', data);
+    carsInTunnel = parseInt(data.trim());
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify({ carsInTunnel }));
+      }
+    });
+    if (carsInTunnel >= 5) {
+      serialPort.write('LED2_ON\n', function(err) {
+        if (err) {
+          return console.log('Error writing to serial port:', err.message);
+        }
+        console.log('Command sent to Arduino: LED2_ON');
+      });
+    } else {
+      serialPort.write('LED2_OFF\n', function(err) {
+        if (err) {
+          return console.log('Error writing to serial port:', err.message);
+        }
+        console.log('Command sent to Arduino: LED2_OFF');
+      });
     }
   });
-});
+  
 
 server.listen(port, () => {
     console.log(`API Server is running on http://localhost:${port}`);

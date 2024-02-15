@@ -1,0 +1,14 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: ./frontend_arduino/frontend_arduino
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+  backend:
+    build:
+      context: ./backend_arduino
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"

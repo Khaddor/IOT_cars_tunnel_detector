@@ -113,19 +113,22 @@ const percentage = carsInTunnel !== null ? Math.floor((carsInTunnel / 30) * 100)
             )}
           </div>
         </div>
+        
         {/* Container with the traffic */}
-
         <div style={{ marginLeft: '20px' }}>
-          <div className="text-center p-5 mt-5" style={{ backgroundColor: '#FAF9F6', borderRadius: '15px' }}>
+        <div className="text-center p-5 mt-5" style={{ backgroundColor: '#FAF9F6', borderRadius: '15px' }}>
             <h2>Traffic Fluidity</h2>
             {percentage !== null ? (
-              <h3 className='text-center' style={{ fontSize: '400%' }}>{percentage}%</h3>
+            <h3 className='text-center' style={{ fontSize: '400%' }} id="10">
+                {carsInTunnel !== null && carsInTunnel < 5 && <span style={{ color: 'green' }}>Fluide</span>}
+                {carsInTunnel !== null && carsInTunnel >= 5 && carsInTunnel <= 15 && <span style={{ color: 'yellow' }}>Moyen</span>}
+                {carsInTunnel !== null && carsInTunnel > 15 && <span style={{ color: 'red' }}>Bouchon</span>}
+            </h3>
             ) : (
-              <p>Loading...</p>
+            <p>Loading...</p>
             )}
-          </div>
         </div>
-
+        </div>
         {/* Container with the percentage of current cars in tunnel */}
         <div style={{ marginLeft: '20px' }}>
           <div className="text-center p-5 mt-5" style={{ backgroundColor: '#FAF9F6', borderRadius: '15px' }}>

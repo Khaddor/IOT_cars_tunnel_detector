@@ -10,6 +10,24 @@ const CarInfo = () => {
   const [totalCars, setTotalCars] = useState(0); 
 
   useEffect(() => {
+    fetch('http://127.0.0.1:3000/api/updateTotalCars', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ totalCars }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.message);
+      })
+      .catch((error) => {
+        console.error('Error updating total cars data:', error);
+      });
+  }, [totalCars]);
+
+
+  useEffect(() => {
     const totalCarsFromData = CarDataa.data.reduce((acc, item) => acc + item.averageCars, 0);
     setTotalCars(totalCarsFromData);
   }, []);
@@ -70,16 +88,25 @@ const CarInfo = () => {
 
   useEffect(() => {
     const socket = new WebSocket('ws://127.0.0.1:3000');
-
+  
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      setCarsInTunnel(data.carsInTunnel);
+      const newCarsInTunnel = data.carsInTunnel;
+  
+      if (newCarsInTunnel > carsInTunnel) {
+        setTotalCars(prevTotalCars => prevTotalCars + (newCarsInTunnel - carsInTunnel));
+      }
+  
+      setCarsInTunnel(newCarsInTunnel);
     };
-
+  
     return () => {
       socket.close();
     };
-  }, []);
+  }, [carsInTunnel]);
+  
+  
+  
 
   // Calculate the percentage of current cars in tunnel
 const percentage = carsInTunnel !== null ? Math.floor((carsInTunnel / 30) * 100) : null;
@@ -120,9 +147,9 @@ const percentage = carsInTunnel !== null ? Math.floor((carsInTunnel / 30) * 100)
             <h2>Traffic Fluidity</h2>
             {percentage !== null ? (
             <h3 className='text-center' style={{ fontSize: '400%' }} id="10">
-                {carsInTunnel !== null && carsInTunnel < 5 && <span style={{ color: 'green' }}>Fluide</span>}
-                {carsInTunnel !== null && carsInTunnel >= 5 && carsInTunnel <= 15 && <span style={{ color: 'yellow' }}>Moyen</span>}
-                {carsInTunnel !== null && carsInTunnel > 15 && <span style={{ color: 'red' }}>Bouchon</span>}
+                {carsInTunnel !== null && carsInTunnel < 15 && <span style={{ color: 'green' }}>Fluide</span>}
+                {carsInTunnel !== null && carsInTunnel >= 15 && carsInTunnel <= 30 && <span style={{ color: 'yellow' }}>Normal</span>}
+                {carsInTunnel !== null && carsInTunnel > 30 && <span style={{ color: 'red' }}>Bouchon</span>}
             </h3>
             ) : (
             <p>Loading...</p>
